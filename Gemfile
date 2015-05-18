@@ -8,4 +8,7 @@ group :development, :test do
   gem 'rspec'
   gem 'rspec-sinatra'
   gem 'shotgun'
+  gem 'data_mapper'
+  gem 'dm-postgres-adapter'
+  gem 'rspec'
 end
