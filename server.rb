@@ -1,6 +1,6 @@
 require 'sinatra/base'
-require 'data_mapper'
-require 'tag'
+require  'data_mapper'
+require './lib/tag'
 
 env = ENV['RACK_ENV'] || 'development'
 
@@ -39,6 +39,16 @@ end
     @links = tag ? tag.links : []
     erb :index
   end
+
+  get '/users/new' do
+    erb :'users/new'
+  end
+
+  post '/users' do
+  User.create(email: params[:email],
+              password: params[:password])
+  redirect to('/')
+end
 
   # start the server if ruby file executed directly
   run! if app_file == $0
