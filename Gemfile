@@ -10,5 +10,6 @@ group :development, :test do
   gem 'shotgun'
   gem 'data_mapper'
   gem 'dm-postgres-adapter'
-  gem 'rspec'
+  gem 'database_cleaner'
+  require 'capybara/rspec'
 end
