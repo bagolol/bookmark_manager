@@ -2,6 +2,7 @@ require 'sinatra'
 require  'data_mapper'
 require './lib/tag'
 require './lib/user'
+require 'rack-flash'
 
 env = ENV['RACK_ENV'] || 'development'
 
@@ -14,10 +15,12 @@ require './lib/link' # this needs to be done after datamapper is initialised
 DataMapper.finalize
 
 # However, the database tables don't exist yet. Let's tell datamapper to create them
-DataMapper.auto_upgrade!
+
 
 class BookmarkManager < Sinatra::Base
+
   enable :sessions
+  use Rack::Flash
 
   set :session_secret, 'super secret'
   set :views, Proc.new { File.join(root, "views") }
@@ -50,15 +53,22 @@ end
   end
 
   get '/users/new' do
+    @user = User.new
     erb :'users/new'
   end
 
   post '/users' do
-    user = User.create(email: params[:email],
+    @user = User.create(email: params[:email],
                        password: params[:password],
                        password_confirmation: params[:password_confirmation])
-    session[:user_id] = user.id
-    redirect to('/')
+    if @user.save
+      session[:user_id] = @user.id
+      redirect to('/')
+    else
+      # currently displays both success and not matching messages
+      flash[:errors] = @user.errors.full_messages
+      erb :'users/new'
+    end
   end
 
   # start the server if ruby file executed directly

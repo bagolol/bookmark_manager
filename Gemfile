@@ -13,4 +13,5 @@ group :development, :test do
   gem 'database_cleaner'
   gem 'bcrypt-ruby'
   require 'capybara/rspec'
+  gem 'rack-flash3'
 end
